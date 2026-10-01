@@ -71,8 +71,13 @@ const inputProduto = ref([])
 const produtos = ref([])
 
 async function obterProdutos() {
-  const resposta = await axios.get('https://api-lpv.onrender.com/produtos');
-  produtos.value = resposta.data.data;
+  try {
+    const resposta = await axios.get('https://api-lpv.onrender.com/produtos');
+    produtos.value = resposta.data.data;
+  } catch (error) {
+    produtos.value = [];
+  }
+
 }
 
 async function salvarProduto() {
@@ -86,22 +91,27 @@ async function salvarProduto() {
     return;
   }
 
-  const requestBody = {
-    nome: inputProduto.value.name,
-    preco: Number(inputProduto.value.price),
-    categoria: inputProduto.value.category,
-    estoque: Number(inputProduto.value.stock)
-  }
+  try {
+    const requestBody = {
+      nome: inputProduto.value.name,
+      preco: Number(inputProduto.value.price),
+      categoria: inputProduto.value.category,
+      estoque: Number(inputProduto.value.stock)
+    }
 
-  if (inputProduto.value.id != '' && inputProduto.value.id != undefined) {
-    await axios.patch(`https://api-lpv.onrender.com/produtos/${inputProduto.value.id}`, requestBody)
-  } else {
-    await axios.post("https://api-lpv.onrender.com/produtos", requestBody)
-  }
+    let requisicao;
+    if (inputProduto.value.id != '' && inputProduto.value.id != undefined) {
+      requisicao = await axios.patch(`https://api-lpv.onrender.com/produtos/${inputProduto.value.id}`, requestBody)
+    } else {
+      requisicao = await axios.post("https://api-lpv.onrender.com/produtos", requestBody)
+    }
 
-  inputProduto.value = {};
-  obterProdutos();
-  return;
+    inputProduto.value = {};
+    obterProdutos();
+    return;
+  } catch (error) {
+    alert(`Erro ao salvar! Mensagem de erro: ${requisicao.error}`)
+  }
 }
 
 async function buscarProdutoPorID(idProduto) {
