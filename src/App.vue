@@ -45,7 +45,7 @@
                 <td> R$ {{ produto.preco }} </td>
                 <td> <span class="badge bg-secondary"> {{ produto.categoria }} </span> </td>
                 <td> <span class="badge" :class="produto.estoque > 0 ? 'bg-success' : 'bg-danger'"> {{ produto.estoque
-                }} </span> </td>
+                    }} </span> </td>
                 <td class="text-center"> <button @click="atribuirValoresParaEdicao(produto.id)"
                     class="btn btn-sm btn-warning me-2"> Editar </button> <button @click="apagarProduto(produto.id)"
                     class="btn btn-sm btn-danger"> Apagar </button> </td>
@@ -59,7 +59,6 @@
 </template>
 
 <script setup>
-import Produto from "./components/produtos.vue";
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
